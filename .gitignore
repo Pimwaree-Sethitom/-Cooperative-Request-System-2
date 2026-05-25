@@ -1,0 +1,58 @@
+# General OS files
+.DS_Store
+Thumbs.db
+db.crypt
+*.db
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# .NET Core / ASP.NET Core
+bin/
+obj/
+appsettings.Local.json
+secrets.json
+.env
+.env.*
+
+# Package / build caches
+*.nuget.dgspec.json
+project.assets.json
+project.nuget.cache
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# JetBrains Rider / WebStorm / PhpStorm
+.idea/
+*.sln.iml
+
+# Log files
+*.log
+logs/
+
+# Frontend / Node (just in case frontend is added later)
+node_modules/
+dist/
+build/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local configuration files
+*.local
