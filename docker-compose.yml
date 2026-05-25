@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: cooperative_db
+    restart: always
+    environment:
+      POSTGRES_DB: cooperative_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cooperative_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: cooperative_backend:latest
+    container_name: cooperative_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5031:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=db;Database=cooperative_db;Username=postgres;Password=postgres_password
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

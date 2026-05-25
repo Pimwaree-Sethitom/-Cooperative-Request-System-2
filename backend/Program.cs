@@ -15,9 +15,19 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
+    // Redirect root to Swagger UI
+    app.MapGet("/", (HttpContext context) =>
+    {
+        context.Response.Redirect("/swagger");
+        return Task.CompletedTask;
+    });
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 
