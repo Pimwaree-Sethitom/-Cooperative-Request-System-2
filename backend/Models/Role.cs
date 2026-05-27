@@ -15,7 +15,7 @@ public class Role
     [Column("name")]
     public string Name { get; set; } = string.Empty;
 
-    [MaxLength(255)]backend/Models
+    [MaxLength(255)]
     [Column("description")]
     public string? Description { get; set; }
 

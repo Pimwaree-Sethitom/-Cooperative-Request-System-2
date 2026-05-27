@@ -28,6 +28,12 @@ public class AppDbContext : DbContext
             .HasIndex(c => c.Name)
             .IsUnique();
 
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Role)
+            .WithMany(r => r.Users)
+            .HasForeignKey(u => u.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<Cooperative>()
             .HasOne(c => c.CreatedByUser)
             .WithMany(u => u.CreatedCooperatives)
