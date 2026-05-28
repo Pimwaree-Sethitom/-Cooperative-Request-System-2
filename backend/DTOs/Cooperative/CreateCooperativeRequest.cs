@@ -8,7 +8,7 @@ public class CreateCooperativeRequest
     [MaxLength(255)]
     public string Name { get; set; } = string.Empty;
 
-    public string? Description { get; set; }
+    public string? Description { get; set; } //optional
 
     [Required(ErrorMessage = "Members are required")]
     public List<CooperativeMemberRequest> Members { get; set; } = new();

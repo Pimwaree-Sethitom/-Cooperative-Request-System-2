@@ -14,6 +14,8 @@ public class CooperativeResponse
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string Status { get; set; } = string.Empty;
+    public string? StaffNote { get; set; }
+    public DateTime? ReviewedAt { get; set; }
     public DateTime? CreatedAt { get; set; }
     public List<CooperativeMemberResponse> Members { get; set; } = new();
 }

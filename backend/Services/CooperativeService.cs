@@ -57,12 +57,48 @@ public class CooperativeService : ICooperativeService
         return cooperatives.Select(MapToResponse).ToList();
     }
 
+    public async Task<List<CooperativeResponse>> GetAllCooperativesAsync(string? status)
+    {
+        var query = _context.Cooperatives.Include(c => c.Members).AsQueryable();
+
+        if (!string.IsNullOrEmpty(status))
+            query = query.Where(c => c.Status == status);
+
+        var cooperatives = await query.OrderByDescending(c => c.CreatedAt).ToListAsync();
+        return cooperatives.Select(MapToResponse).ToList();
+    }
+
+    public async Task<CooperativeResponse> ReviewCooperativeAsync(int staffId, int cooperativeId, ReviewCooperativeRequest request)
+    {
+        if (request.Action != "approve" && request.Action != "reject")
+            throw new ArgumentException("Action must be 'approve' or 'reject'");
+
+        var cooperative = await _context.Cooperatives
+            .Include(c => c.Members)
+            .FirstOrDefaultAsync(c => c.Id == cooperativeId)
+            ?? throw new KeyNotFoundException("Cooperative not found");
+
+        if (cooperative.Status != "pending")
+            throw new InvalidOperationException("This request has already been reviewed");
+
+        cooperative.Status = request.Action == "approve" ? "approved" : "rejected";
+        cooperative.ReviewedBy = staffId;
+        cooperative.ReviewedAt = DateTime.UtcNow;
+        cooperative.StaffNote = request.StaffNote;
+        cooperative.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        return MapToResponse(cooperative);
+    }
+
     private static CooperativeResponse MapToResponse(Cooperative c) => new()
     {
         Id = c.Id,
         Name = c.Name,
         Description = c.Description,
         Status = c.Status,
+        StaffNote = c.StaffNote,
+        ReviewedAt = c.ReviewedAt,
         CreatedAt = c.CreatedAt,
         Members = c.Members.Select(m => new CooperativeMemberResponse
         {
