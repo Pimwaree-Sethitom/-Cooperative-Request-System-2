@@ -6,8 +6,8 @@
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-600 mb-4">
           <Building2 class="w-8 h-8 text-white" />
         </div>
-        <h1 class="text-2xl font-bold text-gray-900">Create Account</h1>
-        <p class="text-gray-500 text-sm mt-1">Register as a public user</p>
+        <h1 class="text-2xl font-bold text-gray-900">สร้างบัญชีใหม่</h1>
+        <p class="text-gray-500 text-sm mt-1">สมัครสมาชิกในฐานะผู้ใช้ทั่วไป</p>
       </div>
 
       <!-- Register Form -->
@@ -17,8 +17,8 @@
             id="fullName"
             v-model="form.fullName"
             type="text"
-            label="Full Name"
-            placeholder="John Doe"
+            label="ชื่อ-นามสกุล"
+            placeholder="เช่น สมชาย ใจดี"
             :error="errors.fullName"
             required
           />
@@ -27,7 +27,7 @@
             id="email"
             v-model="form.email"
             type="email"
-            label="Email Address"
+            label="อีเมล"
             placeholder="you@example.com"
             :error="errors.email"
             required
@@ -37,8 +37,8 @@
             id="password"
             v-model="form.password"
             type="password"
-            label="Password"
-            placeholder="At least 6 characters"
+            label="รหัสผ่าน"
+            placeholder="อย่างน้อย 6 ตัวอักษร"
             :error="errors.password"
             required
           />
@@ -47,8 +47,8 @@
             id="confirmPassword"
             v-model="form.confirmPassword"
             type="password"
-            label="Confirm Password"
-            placeholder="Repeat your password"
+            label="ยืนยันรหัสผ่าน"
+            placeholder="กรอกรหัสผ่านอีกครั้ง"
             :error="errors.confirmPassword"
             required
           />
@@ -58,15 +58,15 @@
           </div>
 
           <AppButton type="submit" class="w-full" :loading="isLoading">
-            Create Account
+            สร้างบัญชี
           </AppButton>
         </form>
 
         <template #footer>
           <p class="text-sm text-center text-gray-600">
-            Already have an account?
+            มีบัญชีอยู่แล้ว?
             <router-link to="/login" class="text-primary-600 hover:text-primary-700 font-medium">
-              Sign in here
+              เข้าสู่ระบบที่นี่
             </router-link>
           </p>
         </template>
@@ -85,42 +85,31 @@ import AppButton from '@/components/ui/AppButton.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
-const auth = useAuthStore()
+const auth   = useAuthStore()
 
-const form = reactive({ fullName: '', email: '', password: '', confirmPassword: '' })
+const form   = reactive({ fullName: '', email: '', password: '', confirmPassword: '' })
 const errors = reactive({ fullName: '', email: '', password: '', confirmPassword: '', general: '' })
 const isLoading = ref(false)
 
 function validate() {
-  Object.keys(errors).forEach(k => errors[k] = '')
+  Object.keys(errors).forEach(k => (errors[k] = ''))
   let valid = true
-
-  if (!form.fullName) {
-    errors.fullName = 'Full name is required'
-    valid = false
-  }
+  if (!form.fullName) { errors.fullName = 'กรุณากรอกชื่อ-นามสกุล'; valid = false }
   if (!form.email) {
-    errors.email = 'Email is required'
-    valid = false
+    errors.email = 'กรุณากรอกอีเมล'; valid = false
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Invalid email format'
-    valid = false
+    errors.email = 'รูปแบบอีเมลไม่ถูกต้อง'; valid = false
   }
   if (!form.password) {
-    errors.password = 'Password is required'
-    valid = false
+    errors.password = 'กรุณากรอกรหัสผ่าน'; valid = false
   } else if (form.password.length < 6) {
-    errors.password = 'Password must be at least 6 characters'
-    valid = false
+    errors.password = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร'; valid = false
   }
   if (!form.confirmPassword) {
-    errors.confirmPassword = 'Please confirm your password'
-    valid = false
+    errors.confirmPassword = 'กรุณายืนยันรหัสผ่าน'; valid = false
   } else if (form.password !== form.confirmPassword) {
-    errors.confirmPassword = 'Passwords do not match'
-    valid = false
+    errors.confirmPassword = 'รหัสผ่านไม่ตรงกัน'; valid = false
   }
-
   return valid
 }
 

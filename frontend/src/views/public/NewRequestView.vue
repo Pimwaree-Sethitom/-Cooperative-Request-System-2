@@ -3,30 +3,33 @@
     <div class="mb-6">
       <RouterLink to="/dashboard" class="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1">
         <ChevronLeft class="w-4 h-4" />
-        Back to Dashboard
+        กลับหน้าแดชบอร์ด
       </RouterLink>
     </div>
 
     <form @submit.prevent="submit" class="space-y-5">
       <!-- Basic Info -->
       <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-        <h2 class="text-sm font-bold text-gray-900">Cooperative Information</h2>
+        <h2 class="text-sm font-bold text-gray-900">ข้อมูลสหกรณ์</h2>
         <div>
-          <label class="block text-sm text-gray-500 mb-1.5">Cooperative Name <span class="text-red-500">*</span></label>
+          <label class="block text-sm text-gray-500 mb-1.5">ชื่อสหกรณ์ <span class="text-red-500">*</span></label>
           <input
             v-model="form.name"
             type="text"
-            placeholder="e.g. Green Valley Farmers Cooperative"
+            placeholder="เช่น สหกรณ์การเกษตรกรีนวัลเลย์"
             class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
             required
           />
         </div>
         <div>
-          <label class="block text-sm text-gray-500 mb-1.5">Description <span class="text-gray-400 font-normal text-xs">(optional)</span></label>
+          <label class="block text-sm text-gray-500 mb-1.5">
+            รายละเอียด
+            <span class="text-gray-400 font-normal text-xs">(ไม่บังคับ)</span>
+          </label>
           <textarea
             v-model="form.description"
             rows="3"
-            placeholder="Brief description of the cooperative's purpose..."
+            placeholder="อธิบายวัตถุประสงค์ของสหกรณ์โดยย่อ..."
             class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none"
           />
         </div>
@@ -36,11 +39,11 @@
       <div class="bg-white rounded-xl border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h2 class="text-sm font-bold text-gray-900">Founding Members</h2>
+            <h2 class="text-sm font-bold text-gray-900">สมาชิกผู้ก่อตั้ง</h2>
             <p class="text-xs text-gray-400 mt-0.5">
-              {{ form.members.length }} member{{ form.members.length !== 1 ? 's' : '' }}
+              {{ form.members.length }} คน
               <span :class="form.members.length >= 10 ? 'text-green-600' : 'text-red-500'">
-                (min. 10 required)
+                (ต้องมีอย่างน้อย 10 คน)
               </span>
             </p>
           </div>
@@ -50,7 +53,7 @@
             class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
           >
             <Plus class="w-3.5 h-3.5" />
-            Add Member
+            เพิ่มสมาชิก
           </button>
         </div>
 
@@ -69,7 +72,7 @@
               <input
                 v-model="member.fullName"
                 type="text"
-                placeholder="Full name *"
+                placeholder="ชื่อ-นามสกุล *"
                 class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
                 required
               />
@@ -78,7 +81,7 @@
               <input
                 v-model="member.nationalId"
                 type="text"
-                placeholder="National ID"
+                placeholder="เลขบัตรประชาชน"
                 class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
               />
             </div>
@@ -86,7 +89,7 @@
               <input
                 v-model="member.phone"
                 type="text"
-                placeholder="Phone"
+                placeholder="เบอร์โทรศัพท์"
                 class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
               />
             </div>
@@ -109,7 +112,7 @@
           class="mt-4 w-full py-2.5 border border-dashed border-gray-200 rounded-lg text-sm text-gray-400 hover:border-primary-300 hover:text-primary-600 transition-colors flex items-center justify-center gap-2"
         >
           <Plus class="w-4 h-4" />
-          Add another member
+          เพิ่มสมาชิกคนอื่น
         </button>
       </div>
 
@@ -119,7 +122,7 @@
 
       <div class="flex items-center justify-end gap-3">
         <RouterLink to="/dashboard" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-          Cancel
+          ยกเลิก
         </RouterLink>
         <button
           type="submit"
@@ -127,7 +130,7 @@
           class="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           <span v-if="submitting" class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-          {{ submitting ? 'Submitting...' : 'Submit Request' }}
+          {{ submitting ? 'กำลังส่ง...' : 'ส่งคำขอ' }}
         </button>
       </div>
     </form>
@@ -139,29 +142,24 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronLeft, Plus, X } from 'lucide-vue-next'
 
-const router = useRouter()
+const router     = useRouter()
 const submitting = ref(false)
-const error = ref('')
+const error      = ref('')
 
 const form = ref({
-  name: '',
+  name:        '',
   description: '',
-  members: Array.from({ length: 10 }, () => ({ fullName: '', nationalId: '', phone: '' }))
+  members: Array.from({ length: 10 }, () => ({ fullName: '', nationalId: '', phone: '' })),
 })
 
-function addMember() {
-  form.value.members.push({ fullName: '', nationalId: '', phone: '' })
-}
-
-function removeMember(i) {
-  form.value.members.splice(i, 1)
-}
+function addMember()     { form.value.members.push({ fullName: '', nationalId: '', phone: '' }) }
+function removeMember(i) { form.value.members.splice(i, 1) }
 
 async function submit() {
   error.value = ''
   const filled = form.value.members.filter(m => m.fullName.trim())
   if (filled.length < 10) {
-    error.value = 'At least 10 members with full names are required.'
+    error.value = 'ต้องมีสมาชิกที่กรอกชื่อ-นามสกุลครบอย่างน้อย 10 คน'
     return
   }
   submitting.value = true

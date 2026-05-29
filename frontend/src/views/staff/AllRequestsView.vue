@@ -3,99 +3,81 @@
 
     <!-- Search + filter row -->
     <div class="flex gap-3">
-      <!-- Search input -->
       <div class="relative flex-1">
         <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
         <input
           v-model="search"
           type="text"
-          placeholder="Search by cooperative name or applicant..."
+          placeholder="ค้นหาด้วยชื่อสหกรณ์หรือผู้ยื่นคำขอ..."
           class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition"
         />
       </div>
-
-      <!-- Status dropdown -->
       <select
         v-model="statusFilter"
         class="px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition appearance-none pr-9 cursor-pointer min-w-[160px]"
       >
-        <option value="all">All Statuses</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
+        <option value="all">สถานะทั้งหมด</option>
+        <option value="pending">รอดำเนินการ</option>
+        <option value="approved">อนุมัติแล้ว</option>
+        <option value="rejected">ถูกปฏิเสธ</option>
       </select>
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
 
-      <!-- Empty state -->
       <div v-if="filteredList.length === 0" class="py-20 text-center">
         <div class="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center mx-auto mb-4">
           <FileText class="w-5 h-5 text-primary-400" />
         </div>
-        <p class="text-sm font-semibold text-gray-500">No requests found</p>
+        <p class="text-sm font-semibold text-gray-500">ไม่พบคำขอ</p>
       </div>
 
       <div v-else>
         <!-- Header -->
-        <div class="grid grid-cols-12 gap-4 px-5 py-3 border-b border-gray-100 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
-          <div class="col-span-4">Cooperative</div>
-          <div class="col-span-2">Applicant</div>
-          <div class="col-span-1 text-center">Members</div>
-          <div class="col-span-2 text-center">Status</div>
-          <div class="col-span-2">Date</div>
-          <div class="col-span-1 text-right">Actions</div>
+        <div class="grid grid-cols-12 gap-4 px-5 py-3 border-b border-gray-200 text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
+          <div class="col-span-4">สหกรณ์</div>
+          <div class="col-span-2">ผู้ยื่นคำขอ</div>
+          <div class="col-span-1 text-center">สมาชิก</div>
+          <div class="col-span-2 text-center">สถานะ</div>
+          <div class="col-span-2">วันที่</div>
+          <div class="col-span-1 text-right">การดำเนินการ</div>
         </div>
 
-        <!-- Data rows (paginated) -->
+        <!-- Data rows -->
         <div
           v-for="coop in pagedList"
           :key="coop.id"
-          class="grid grid-cols-12 gap-4 px-5 py-4 border-b border-gray-50 last:border-0 items-center hover:bg-primary-50/30 transition-colors"
+          class="grid grid-cols-12 gap-4 px-5 py-4 border-b border-gray-200 last:border-0 items-center hover:bg-primary-50/30 transition-colors"
         >
-          <!-- Cooperative name + city -->
           <div class="col-span-4 cursor-pointer" @click="selected = coop">
             <p class="text-sm font-bold text-gray-900">{{ coop.name }}</p>
             <p class="text-xs text-gray-400 mt-0.5">{{ coop.city }}</p>
           </div>
-
-          <!-- Applicant -->
           <div class="col-span-2">
             <p class="text-sm text-gray-600">{{ coop.applicant }}</p>
           </div>
-
-          <!-- Members count -->
           <div class="col-span-1 text-center">
             <span class="text-sm text-gray-600">{{ coop.members.length }}</span>
           </div>
-
-          <!-- Status badge -->
           <div class="col-span-2 flex justify-center">
             <span :class="statusClass(coop.status)" class="text-xs font-semibold px-2.5 py-1 rounded-full">
               {{ statusLabel(coop.status) }}
             </span>
           </div>
-
-          <!-- Date -->
           <div class="col-span-2">
             <span class="text-xs text-gray-500">{{ formatDate(coop.createdAt) }}</span>
           </div>
-
-          <!-- Actions -->
           <div class="col-span-1 flex justify-end gap-2">
-            <button
-              @click="selected = coop"
-              class="text-xs font-semibold text-gray-400 hover:text-gray-700 transition-colors"
-            >
-              View
+            <button @click="selected = coop" class="text-xs font-semibold text-gray-400 hover:text-gray-700 transition-colors">
+              ดู
             </button>
             <button
               v-if="coop.status === 'pending'"
               @click="openReview(coop)"
               class="text-xs font-semibold text-primary-600 hover:text-primary-800 transition-colors"
             >
-              Review
+              ตรวจสอบ
             </button>
           </div>
         </div>
@@ -105,41 +87,33 @@
     <!-- Pagination -->
     <div v-if="filteredList.length > 0" class="flex items-center justify-between">
       <p class="text-sm text-gray-500">
-        Showing {{ rangeStart }} to {{ rangeEnd }} of {{ filteredList.length }} results
+        แสดง {{ rangeStart }}–{{ rangeEnd }} จาก {{ filteredList.length }} รายการ
       </p>
       <div class="flex items-center gap-1">
         <button
           @click="currentPage--"
           :disabled="currentPage === 1"
           class="px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors"
-          :class="currentPage === 1
-            ? 'border-gray-100 text-gray-300 cursor-not-allowed'
-            : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
+          :class="currentPage === 1 ? 'border-gray-100 text-gray-300 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
         >
-          Previous
+          ก่อนหน้า
         </button>
-
         <button
           v-for="p in totalPages"
           :key="p"
           @click="currentPage = p"
           class="w-8 h-8 text-sm font-semibold rounded-lg transition-colors"
-          :class="currentPage === p
-            ? 'bg-primary-600 text-white'
-            : 'text-gray-600 hover:bg-gray-50'"
+          :class="currentPage === p ? 'bg-primary-600 text-white' : 'text-gray-600 hover:bg-gray-50'"
         >
           {{ p }}
         </button>
-
         <button
           @click="currentPage++"
           :disabled="currentPage === totalPages"
           class="px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors"
-          :class="currentPage === totalPages
-            ? 'border-gray-100 text-gray-300 cursor-not-allowed'
-            : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
+          :class="currentPage === totalPages ? 'border-gray-100 text-gray-300 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
         >
-          Next
+          ถัดไป
         </button>
       </div>
     </div>
@@ -154,7 +128,7 @@
         <div class="bg-white rounded-3xl shadow-xl w-full max-w-lg max-h-[82vh] flex flex-col overflow-hidden">
           <div class="bg-block-mint px-6 py-5 flex items-start justify-between">
             <div>
-              <p class="text-[11px] font-semibold text-primary-700 uppercase tracking-widest mb-1">Request Detail</p>
+              <p class="text-[11px] font-semibold text-primary-700 uppercase tracking-widest mb-1">รายละเอียดคำขอ</p>
               <h2 class="text-lg font-bold text-gray-900 tracking-tight">{{ selected.name }}</h2>
               <p class="text-xs text-gray-500 mt-0.5">{{ selected.applicant }} · {{ selected.city }}</p>
               <span :class="statusClass(selected.status)" class="text-xs font-semibold px-2.5 py-1 rounded-full inline-block mt-2">
@@ -168,16 +142,16 @@
 
           <div class="overflow-y-auto flex-1 p-6 space-y-5">
             <div v-if="selected.description">
-              <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">Description</p>
+              <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">รายละเอียด</p>
               <p class="text-sm text-gray-700 leading-relaxed">{{ selected.description }}</p>
             </div>
             <div v-if="selected.staffNote" class="bg-amber-50 border border-amber-100 rounded-2xl p-4">
-              <p class="text-[11px] font-semibold text-amber-700 uppercase tracking-widest mb-1.5">Staff Note</p>
+              <p class="text-[11px] font-semibold text-amber-700 uppercase tracking-widest mb-1.5">บันทึกเจ้าหน้าที่</p>
               <p class="text-sm text-amber-800">{{ selected.staffNote }}</p>
             </div>
             <div>
               <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">
-                Members ({{ selected.members.length }})
+                สมาชิก ({{ selected.members.length }} คน)
               </p>
               <div class="space-y-2">
                 <div
@@ -194,22 +168,22 @@
                   </div>
                 </div>
                 <p v-if="selected.members.length > 10" class="text-xs text-gray-400 text-center pt-1">
-                  + {{ selected.members.length - 10 }} more members
+                  + อีก {{ selected.members.length - 10 }} คน
                 </p>
               </div>
             </div>
-            <div class="text-xs text-gray-400 space-y-1 pt-4 border-t border-gray-100">
-              <p>Submitted: {{ formatDate(selected.createdAt) }}</p>
-              <p v-if="selected.reviewedAt">Reviewed: {{ formatDate(selected.reviewedAt) }}</p>
+            <div class="text-xs text-gray-400 space-y-1 pt-4 border-t border-gray-200">
+              <p>วันที่ยื่น: {{ formatDate(selected.createdAt) }}</p>
+              <p v-if="selected.reviewedAt">วันที่ตรวจสอบ: {{ formatDate(selected.reviewedAt) }}</p>
             </div>
           </div>
 
-          <div v-if="selected.status === 'pending'" class="p-5 border-t border-gray-100 flex justify-end">
+          <div v-if="selected.status === 'pending'" class="p-5 border-t border-gray-200 flex justify-end">
             <button
               @click="openReview(selected); selected = null"
               class="px-6 py-2.5 text-sm font-semibold text-white bg-primary-600 rounded-full hover:bg-primary-700 transition-colors"
             >
-              Review this request
+              ตรวจสอบคำขอนี้
             </button>
           </div>
         </div>
@@ -226,7 +200,7 @@
         <div class="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden">
           <div class="bg-block-mint px-6 py-5 flex items-center justify-between">
             <div>
-              <p class="text-[11px] font-semibold text-primary-700 uppercase tracking-widest mb-1">Staff Review</p>
+              <p class="text-[11px] font-semibold text-primary-700 uppercase tracking-widest mb-1">การตรวจสอบของเจ้าหน้าที่</p>
               <h2 class="text-lg font-bold text-gray-900 tracking-tight">{{ reviewing.name }}</h2>
             </div>
             <button @click="cancelReview" class="text-gray-400 hover:text-gray-700 transition-colors">
@@ -236,7 +210,7 @@
 
           <div class="p-6 space-y-5">
             <div>
-              <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Decision</p>
+              <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">การตัดสินใจ</p>
               <div class="grid grid-cols-2 gap-2">
                 <button
                   @click="reviewForm.action = 'approve'"
@@ -246,7 +220,7 @@
                   class="py-3 text-sm font-semibold rounded-full border transition-all flex items-center justify-center gap-2"
                 >
                   <CheckCircle class="w-4 h-4" />
-                  Approve
+                  อนุมัติ
                 </button>
                 <button
                   @click="reviewForm.action = 'reject'"
@@ -256,19 +230,20 @@
                   class="py-3 text-sm font-semibold rounded-full border transition-all flex items-center justify-center gap-2"
                 >
                   <XCircle class="w-4 h-4" />
-                  Reject
+                  ปฏิเสธ
                 </button>
               </div>
             </div>
 
             <div>
               <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">
-                Staff Note <span class="normal-case font-normal text-gray-300 tracking-normal ml-1">(optional)</span>
+                บันทึกเจ้าหน้าที่
+                <span class="normal-case font-normal text-gray-300 tracking-normal ml-1">(ไม่บังคับ)</span>
               </label>
               <textarea
                 v-model="reviewForm.note"
                 rows="3"
-                placeholder="Add a note for the applicant..."
+                placeholder="เพิ่มหมายเหตุสำหรับผู้ยื่นคำขอ..."
                 class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition resize-none"
               />
             </div>
@@ -279,7 +254,7 @@
               @click="cancelReview"
               class="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
             >
-              Cancel
+              ยกเลิก
             </button>
             <button
               @click="submitReview"
@@ -288,7 +263,7 @@
               :class="reviewForm.action === 'reject' ? 'bg-red-600 hover:bg-red-700' : 'bg-primary-600 hover:bg-primary-700'"
             >
               <span v-if="submitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              {{ submitting ? 'Submitting…' : reviewForm.action === 'reject' ? 'Reject Request' : 'Approve Request' }}
+              {{ submitting ? 'กำลังส่ง...' : reviewForm.action === 'reject' ? 'ปฏิเสธคำขอ' : 'อนุมัติคำขอ' }}
             </button>
           </div>
         </div>
@@ -314,16 +289,13 @@ const reviewing    = ref(null)
 const submitting   = ref(false)
 const reviewForm   = ref({ action: '', note: '' })
 
-/* Reset page when filters change */
 watch([search, statusFilter], () => { currentPage.value = 1 })
 
 const filteredList = computed(() => {
-  const q   = search.value.toLowerCase()
-  const sf  = statusFilter.value
+  const q  = search.value.toLowerCase()
+  const sf = statusFilter.value
   return list.value.filter(c => {
-    const matchesSearch = !q
-      || c.name.toLowerCase().includes(q)
-      || c.applicant.toLowerCase().includes(q)
+    const matchesSearch = !q || c.name.toLowerCase().includes(q) || c.applicant.toLowerCase().includes(q)
     const matchesStatus = sf === 'all' || c.status === sf
     return matchesSearch && matchesStatus
   })
@@ -364,13 +336,13 @@ function statusClass(status) {
 }
 
 function statusLabel(status) {
-  if (status === 'approved') return 'Approved'
-  if (status === 'rejected') return 'Rejected'
-  return 'Pending'
+  if (status === 'approved') return 'อนุมัติแล้ว'
+  if (status === 'rejected') return 'ถูกปฏิเสธ'
+  return 'รอดำเนินการ'
 }
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 </script>

@@ -22,22 +22,22 @@ const auth  = useAuthStore()
 
 const pageTitle = computed(() => {
   switch (route.name) {
-    case 'dashboard':       return 'Dashboard'
-    case 'my-requests':     return 'My Requests'
-    case 'new-request':     return 'New Request'
-    case 'staff-dashboard': return 'Staff Dashboard'
-    case 'staff-requests':  return 'Review Requests'
+    case 'dashboard':       return 'แดชบอร์ด'
+    case 'my-requests':     return 'คำขอของฉัน'
+    case 'new-request':     return 'ยื่นคำขอใหม่'
+    case 'staff-dashboard': return 'แดชบอร์ดเจ้าหน้าที่'
+    case 'staff-requests':  return 'ตรวจสอบคำขอ'
     default:                return ''
   }
 })
 
 const pageSubtitle = computed(() => {
   switch (route.name) {
-    case 'dashboard':       return `Welcome back, ${auth.fullName}`
-    case 'my-requests':     return 'All your cooperative registration submissions'
-    case 'new-request':     return 'Fill in the details below. At least 10 founding members are required.'
-    case 'staff-dashboard': return `Welcome, ${auth.fullName}`
-    case 'staff-requests':  return 'Manage cooperative registration applications'
+    case 'dashboard':       return `ยินดีต้อนรับ, ${auth.fullName}`
+    case 'my-requests':     return 'คำขอจดทะเบียนสหกรณ์ทั้งหมดของคุณ'
+    case 'new-request':     return 'กรอกรายละเอียดด้านล่าง โดยต้องมีสมาชิกผู้ก่อตั้งอย่างน้อย 10 คน'
+    case 'staff-dashboard': return `ยินดีต้อนรับ, ${auth.fullName}`
+    case 'staff-requests':  return 'จัดการและตรวจสอบคำขอจดทะเบียนสหกรณ์'
     default:                return ''
   }
 })

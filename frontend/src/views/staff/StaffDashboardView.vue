@@ -3,13 +3,13 @@
 
     <!-- Stats row -->
     <div class="grid grid-cols-4 gap-3">
-      <div class="bg-white rounded-2xl border border-gray-100 p-5">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center">
             <FileText class="w-4 h-4 text-gray-400" />
           </div>
           <div>
-            <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">Total Requests</p>
+            <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">คำขอทั้งหมด</p>
             <p class="text-2xl font-bold text-gray-900 tracking-tight">{{ stats.total }}</p>
           </div>
         </div>
@@ -21,7 +21,7 @@
             <Clock class="w-4 h-4 text-amber-500" />
           </div>
           <div>
-            <p class="text-[11px] font-semibold text-amber-600 uppercase tracking-widest">Pending Review</p>
+            <p class="text-[11px] font-semibold text-amber-600 uppercase tracking-widest">รอตรวจสอบ</p>
             <p class="text-2xl font-bold text-gray-900 tracking-tight">{{ stats.pending }}</p>
           </div>
         </div>
@@ -33,7 +33,7 @@
             <CheckCircle class="w-4 h-4 text-primary-600" />
           </div>
           <div>
-            <p class="text-[11px] font-semibold text-primary-700 uppercase tracking-widest">Approved</p>
+            <p class="text-[11px] font-semibold text-primary-700 uppercase tracking-widest">อนุมัติแล้ว</p>
             <p class="text-2xl font-bold text-gray-900 tracking-tight">{{ stats.approved }}</p>
           </div>
         </div>
@@ -45,7 +45,7 @@
             <XCircle class="w-4 h-4 text-red-500" />
           </div>
           <div>
-            <p class="text-[11px] font-semibold text-red-600 uppercase tracking-widest">Rejected</p>
+            <p class="text-[11px] font-semibold text-red-600 uppercase tracking-widest">ถูกปฏิเสธ</p>
             <p class="text-2xl font-bold text-gray-900 tracking-tight">{{ stats.rejected }}</p>
           </div>
         </div>
@@ -56,21 +56,13 @@
     <div class="grid grid-cols-5 gap-5">
 
       <!-- Left: Donut chart -->
-      <div class="col-span-2 bg-white rounded-2xl border border-gray-100 p-6">
-        <p class="text-base font-bold text-gray-900 tracking-tight mb-6">Request Distribution</p>
+      <div class="col-span-2 bg-white rounded-2xl border border-gray-200 p-6">
+        <p class="text-base font-bold text-gray-900 tracking-tight mb-6">การกระจายคำขอ</p>
 
-        <!-- SVG donut + center label -->
         <div class="flex flex-col items-center gap-6">
           <div class="relative w-44 h-44">
             <svg viewBox="0 0 36 36" class="w-44 h-44">
-              <!-- Track -->
-              <circle
-                cx="18" cy="18" r="15.9155"
-                fill="none"
-                stroke="#f3f4f6"
-                stroke-width="3.8"
-              />
-              <!-- Segments -->
+              <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#f3f4f6" stroke-width="3.8" />
               <circle
                 v-for="seg in donutSegments"
                 :key="seg.label"
@@ -83,11 +75,10 @@
                 :stroke-dashoffset="seg.offset"
               />
             </svg>
-            <!-- Center text overlay -->
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="text-center">
                 <p class="text-2xl font-bold text-gray-900 leading-none">{{ stats.total }}</p>
-                <p class="text-xs text-gray-400 mt-1">Total</p>
+                <p class="text-xs text-gray-400 mt-1">ทั้งหมด</p>
               </div>
             </div>
           </div>
@@ -96,36 +87,36 @@
           <div class="flex items-center gap-5">
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
-              <span class="text-sm text-gray-600">Pending</span>
+              <span class="text-sm text-gray-600">รอดำเนินการ</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-primary-500 shrink-0"></span>
-              <span class="text-sm text-gray-600">Approved</span>
+              <span class="text-sm text-gray-600">อนุมัติแล้ว</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
-              <span class="text-sm text-gray-600">Rejected</span>
+              <span class="text-sm text-gray-600">ถูกปฏิเสธ</span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Right: Pending requests list -->
-      <div class="col-span-3 bg-white rounded-2xl border border-gray-100 p-6">
+      <div class="col-span-3 bg-white rounded-2xl border border-gray-200 p-6">
         <div class="flex items-start justify-between mb-1">
           <div>
-            <p class="text-base font-bold text-gray-900 tracking-tight">Pending Requests</p>
-            <p class="text-sm text-gray-400 mt-0.5">Awaiting your review</p>
+            <p class="text-base font-bold text-gray-900 tracking-tight">คำขอที่รอตรวจสอบ</p>
+            <p class="text-sm text-gray-400 mt-0.5">รอการตรวจสอบจากคุณ</p>
           </div>
           <RouterLink
             to="/staff/requests"
             class="text-sm font-semibold text-primary-600 hover:text-primary-800 transition-colors mt-0.5"
           >
-            View All
+            ดูทั้งหมด
           </RouterLink>
         </div>
 
-        <div class="mt-5 divide-y divide-gray-50">
+        <div class="mt-5 divide-y divide-gray-200">
           <div
             v-for="coop in pendingRequests"
             :key="coop.id"
@@ -134,7 +125,7 @@
             <div class="flex-1 min-w-0 mr-4">
               <p class="text-sm font-bold text-gray-900">{{ coop.name }}</p>
               <p class="text-xs text-gray-400 mt-0.5">
-                {{ coop.applicant }} · {{ coop.city }} · {{ coop.members.length }} members
+                {{ coop.applicant }} · {{ coop.city }} · {{ coop.members.length }} สมาชิก
               </p>
             </div>
             <div class="flex items-center gap-4 shrink-0">
@@ -143,13 +134,13 @@
                 @click="$router.push('/staff/requests')"
                 class="text-sm font-semibold text-primary-600 hover:text-primary-800 transition-colors"
               >
-                Review
+                ตรวจสอบ
               </button>
             </div>
           </div>
 
           <div v-if="pendingRequests.length === 0" class="py-10 text-center">
-            <p class="text-sm text-gray-400">No pending requests</p>
+            <p class="text-sm text-gray-400">ไม่มีคำขอที่รอตรวจสอบ</p>
           </div>
         </div>
       </div>
@@ -172,30 +163,23 @@ const stats = computed(() => ({
   rejected: list.filter(c => c.status === 'rejected').length,
 }))
 
-const pendingRequests = computed(() =>
-  list.filter(c => c.status === 'pending')
-)
+const pendingRequests = computed(() => list.filter(c => c.status === 'pending'))
 
-/* SVG donut segments */
 const SEGMENT_COLORS = {
-  pending:  '#f59e0b',  // amber-400
-  approved: '#10b981',  // emerald-500
-  rejected: '#ef4444',  // red-500
+  pending:  '#f59e0b',
+  approved: '#10b981',
+  rejected: '#ef4444',
 }
 
 const donutSegments = computed(() => {
   const total = stats.value.total
   if (total === 0) return []
-
-  const order = ['pending', 'approved', 'rejected']
-  const CIRC  = 100 // circumference when r=15.9155
+  const CIRC = 100
   let accumulated = 0
-
-  return order
+  return ['pending', 'approved', 'rejected']
     .map(key => {
-      const value = stats.value[key]
-      const pct   = (value / total) * CIRC
-      const offset = CIRC * 0.25 - accumulated   // start at 12 o'clock
+      const pct    = (stats.value[key] / total) * CIRC
+      const offset = CIRC * 0.25 - accumulated
       accumulated += pct
       return { label: key, pct, offset, color: SEGMENT_COLORS[key] }
     })
@@ -204,6 +188,6 @@ const donutSegments = computed(() => {
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 </script>
